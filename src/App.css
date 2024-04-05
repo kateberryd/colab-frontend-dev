@@ -1,9 +1,7 @@
 .App {
-  height: 50vh;
-  text-align: center;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
@@ -81,13 +79,13 @@ h2 span{
 }
 
 
-input {
+/* input {
 padding: 20px 40px;
 border-radius: 5px;
 border: 1px solid #282c34;
 outline: none;
 font-size: 18px;
-}
+} */
 
 
 .App-logo {
