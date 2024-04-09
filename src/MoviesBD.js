@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StarIcon } from "@heroicons/react/24/solid";
+import { Modal } from "./components/Modal";
+import { Input } from "./components/Input";
 
 function MoviesDB() {
 	const [movies, setMovies] = useState([
@@ -30,24 +32,27 @@ function MoviesDB() {
 			rating: 4.5,
 			year: "2012",
 		},
-
-		{
-			name: "SpongBob",
-			img: "https://images.unsplash.com/photo-1620510625142-b45cbb784397",
-			rating: 4.5,
-			year: "2012",
-		},
-
-		{
-			name: "Cinderella",
-			img: "https://images.unsplash.com/photo-1620510625142-b45cbb784397",
-			rating: 4.5,
-			year: "2012",
-		},
 	]);
 
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchResult, setSearchResult] = useState([]);
+
+	const [newMovie, setNewMovie] = useState({
+		name: "",
+		img: "",
+		year: "",
+		rating: 0,
+	});
+
+	let [isOpen, setIsOpen] = useState(false);
+
+	function closeModal() {
+		setIsOpen(false);
+	}
+
+	function openModal() {
+		setIsOpen(true);
+	}
 
 	const handleChange = (event) => {
 		setSearchTerm(event.target.value);
@@ -63,11 +68,44 @@ function MoviesDB() {
 		}
 	}, [searchTerm]);
 
-	console.log(searchResult);
+	const handleAddMoviesChange = (event) => {
+		const { name, value } = event.target;
+
+		setNewMovie((prevMovie) => ({
+			...prevMovie,
+			[name]: value,
+		}));
+	};
+
+	const handleSubmit = () => {
+		setMovies((prevMovies) => [...prevMovies, newMovie]);
+		alert("Movie saved successfully");
+		// setNewMovie({
+		// 	name: "",
+		// 	img: "",
+		// 	year: "",
+		// 	rating: 0,
+		// });
+		closeModal();
+	};
+
+	console.log(newMovie);
+
 	return (
 		<div className="pt-10 pb-20">
 			<h1 className="text-3xl font-extrabold text-center">Most Popular</h1>
 			<p className="text-lg pt-2 text-center">My movies database</p>
+
+			<div className="fixed inset-0 flex items-center justify-center">
+				<button
+					type="button"
+					onClick={openModal}
+					className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+				>
+					Add Movies
+				</button>
+			</div>
+
 			<div className="pt-5">
 				<input
 					className="w-full h-[56px] px-5 border-2 rounded-full outline-1 capitalize outline-blue-300"
@@ -128,6 +166,60 @@ function MoviesDB() {
 					</div>
 				)}
 			</div>
+
+			<Modal isOpen={isOpen} closeModal={closeModal} title="Add Movies Modal">
+				<div>
+					<Input
+						placeholder="Please enter movie image url"
+						label="Image URL"
+						name="img"
+						handleChange={handleAddMoviesChange}
+					/>
+
+					<Input
+						placeholder="Please enter movie name "
+						label="Name"
+						name="name"
+						handleChange={handleAddMoviesChange}
+					/>
+					<Input
+						placeholder="Please enter movie name "
+						label="Released Year"
+						type="date"
+						name="year"
+						handleChange={handleAddMoviesChange}
+					/>
+					<Input
+						placeholder="Please enter movie rating "
+						label="Rating"
+						type="number"
+						name="rating"
+						handleChange={handleAddMoviesChange}
+					/>
+				</div>
+
+				<div className="flex items-center justify-between pt-5 ">
+					<div className="mt-4">
+						<button
+							type="button"
+							onClick={handleSubmit}
+							className="inline-flex justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white hover:bg-blue-200 hover:text-blue-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+						>
+							Submit
+						</button>
+					</div>
+
+					<div className="mt-4">
+						<button
+							type="button"
+							className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+							onClick={closeModal}
+						>
+							Cancel
+						</button>
+					</div>
+				</div>
+			</Modal>
 		</div>
 	);
 }
